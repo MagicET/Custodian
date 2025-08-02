@@ -1,0 +1,61 @@
+/* changing the editing text color back */
+
+
+/* hidingHeaderButton feature */
+._headerContainer_efl0u_1 {
+    transition: translate .2s ease;
+}
+
+._headerContainer_efl0u_1:has(.hidingHeaderButton:checked) {
+    translate: 0 -4em;
+}
+
+._headerContainer_efl0u_1:has(._soundcloudPlayer_efl0u_43):has(.hidingHeaderButton:checked) {
+    translate: 0 -5.5em;
+}
+
+._headerContainer_efl0u_1 .hidingHeaderButton {
+    appearance: none;
+    outline: none;
+    cursor: pointer;
+    top: 2.1em;
+    position: absolute;
+    left: min(calc(50vw + 21rem - 1.3em), calc(100vw - 1.3rem));
+    transition: translate .2s ease;
+}
+
+._headerContainer_efl0u_1 .hidingHeaderButton:checked {
+    translate: 0 2em;
+}
+
+._headerContainer_efl0u_1:has(._soundcloudPlayer_efl0u_43) .hidingHeaderButton:checked {
+    translate: 0 3.5em;
+}
+
+._headerContainer_efl0u_1 .hidingHeaderButton::before {
+    content: "▲";
+}
+
+._headerContainer_efl0u_1 .hidingHeaderButton:checked::before {
+    content: "▼";
+}
+
+/* maximizeTextbox feature */
+._chatTextarea_dzva7_1 ~ .maximizingTextboxButton {
+    appearance: none;
+    outline: none;
+    cursor: pointer;
+    position: absolute;
+    right: 0;
+    translate: -80% 10%;
+}
+
+._chatTextarea_dzva7_1 ~ .maximizingTextboxButton::before {
+    content: "↗";
+    color: #805ad5;
+    font-size: 1.2rem;
+}
+
+._chatTextarea_dzva7_1 ~ .maximizingTextboxButton:checked::before {
+    content: "↙";
+}

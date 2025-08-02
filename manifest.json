@@ -1,0 +1,24 @@
+{
+  "name": "Custodian",
+  "version": "1.0.1",
+  "manifest_version": 3,
+  "description": "This extension enhances the experience of JanitorAI. Works fully locally. Made by Magicet.",
+  "permissions": [
+    "storage"
+  ],
+  "content_scripts": [{
+    "matches": ["https://janitorai.com/chats/*"],
+    "css": ["chat/chat.css"],
+    "js": ["storage.js", "chat/chat.js"]
+  }],
+  "icons": {
+    "16": "icon/icon16.png",
+    "48": "icon/icon48.png",
+    "128": "icon/icon128.png"
+  },
+  "action": {
+    "default_title": "Manage the feature flags and other preferences.",
+    "default_icon": "icon/icon128.png",
+    "default_popup": "popup/popup.html"
+  }
+}
