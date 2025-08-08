@@ -128,6 +128,21 @@
             transform: translateX(calc(var(--size) * 0.62)) scale(0.8);
         }
 
+        .warning {
+            display: none;
+            font-weight: 600;
+            font-size: 0.6rem;
+            color: red;
+            background: #f002;
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.4rem;
+            border: 1px solid red;
+        }
+        
+        label:has(input:checked) .warning {
+            display: block;
+        }
+
         a {
             color: var(--main-color);
             font-size: 0.6rem;
