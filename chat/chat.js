@@ -16,6 +16,7 @@ fetchFeatureFlags().then((featureFlags) => {
         setObservation((mutations, observer) => {
             const header = document.getElementsByClassName("_headerContainer_efl0u_1")[0];
             if (header != undefined) {
+                // working with CSS
                 const hidingHeaderButton = document.createElement("input");
                 hidingHeaderButton.type = "checkbox";
                 hidingHeaderButton.className = "hidingHeaderButton";
@@ -27,9 +28,10 @@ fetchFeatureFlags().then((featureFlags) => {
 
     // maximizingTextbox feature
     if (featureFlags.maximizingTextbox != "none") {
-        setObservation((mutations, oneshotObserver) => {
+        setObservation((mutations, observer) => {
             const textarea = document.getElementsByClassName("_chatTextarea_dzva7_1")[0];
             if (textarea != undefined) {
+                // dummy to calculate the auto height for the textarea
                 const dummy = document.createElement("textarea");
                 dummy.className = "_chatTextarea_dzva7_1";
                 dummy.placeholder = "dummy\ndummy";
@@ -37,9 +39,11 @@ fetchFeatureFlags().then((featureFlags) => {
                 dummy.style.setProperty("height", "1px", "important");
                 dummy.style.setProperty("width", `${textarea.clientWidth}px`);
                 document.body.appendChild(dummy)
-
+                
+                // border-color is already in Janitor's code
                 textarea.style.setProperty("transition", "border-color .2s, height .2s ease");
 
+                
                 const maximizingTextboxButton = document.createElement("input");
                 maximizingTextboxButton.type = "checkbox";
                 maximizingTextboxButton.className = "maximizingTextboxButton";
@@ -47,7 +51,8 @@ fetchFeatureFlags().then((featureFlags) => {
                 if (featureFlags.maximizingTextbox == "appear") {
                     maximizingTextboxButton.style.setProperty("display", "none");
                 }
-
+                
+                // set the maximized height depending on whether there is the soundcloud player in the header
                 const maxedHeight = (() => {
                     const header = document.querySelector("._headerContainer_efl0u_1:has(._soundcloudPlayer_efl0u_43)");
                     if (header != undefined) {
@@ -56,12 +61,14 @@ fetchFeatureFlags().then((featureFlags) => {
                     return "calc(100vh - 5.8rem)";
                 })();
 
+                // the number of max lines is 10
                 dummy.value = "a\na\na\na\na\na\na\na\na\na";
                 const biggestScrollHeight = dummy.scrollHeight;
                 maximizingTextboxButton.addEventListener("change", function () {
                     if (maximizingTextboxButton.checked) {
                         textarea.style.setProperty("height", maxedHeight, "important");
                     } else {
+                        // adjusting the height to the content. if the content is more than 10 lines (maximum) the height will be capped
                         dummy.value = textarea.value;
                         if (dummy.scrollHeight < biggestScrollHeight) {
                             textarea.style.setProperty("height", `${dummy.scrollHeight}px`, "important");
@@ -72,48 +79,55 @@ fetchFeatureFlags().then((featureFlags) => {
                 });
                 textarea.parentElement.appendChild(maximizingTextboxButton);
 
+                // running when the height is changed automatically
                 const observationConfig = { attributes: true, attributeFilter: ["style"] };
 
+                // the number of minimum lines is 2 and that is guaranteed by the "placeholder" attribute
                 dummy.value = "";
                 const smallestScrollHeight = dummy.scrollHeight;
                 const observationCallback = (() => {
                     if (featureFlags.maximizingTextbox == "replace") {
                         return (mutations, observer) => {
-                            for (const mutation of mutations) {
-                                if (maximizingTextboxButton.checked) {
-                                    mutation.target.style.setProperty("height", maxedHeight, "important");
-                                }
+                            if (textarea.value == "") {
+                                maximizingTextboxButton.checked = false;
+                            }
+                            if (maximizingTextboxButton.checked) {
+                                textarea.style.setProperty("height", maxedHeight, "important");
                             }
                         };
                     } else {
                         return (mutations, observer) => {
-                            for (const mutation of mutations) {
-                                if (mutation.target.scrollHeight > smallestScrollHeight) {
-                                    maximizingTextboxButton.style.removeProperty("display");
-                                } else {
-                                    maximizingTextboxButton.style.setProperty("display", "none");                                    
-                                }
-                                if (maximizingTextboxButton.checked) {
-                                    mutation.target.style.setProperty("height", maxedHeight, "important");
-                                }
+                            // if "appear" is selected, the button appears only when the number of lines are more than 2 so the button won't overlap on the "enhance msg" ellipsis
+                            if (textarea.scrollHeight > smallestScrollHeight) {
+                                maximizingTextboxButton.style.removeProperty("display");
+                            } else {
+                                maximizingTextboxButton.style.setProperty("display", "none");                                    
+                            }
+
+                            // the rest is the same
+                            if (textarea.value == "") {
+                                maximizingTextboxButton.checked = false;
+                            }
+                            if (maximizingTextboxButton.checked) {
+                                textarea.setProperty("height", maxedHeight, "important");
                             }
                         };
                     }
                 })();
-                const observer = new MutationObserver(observationCallback);
+                new MutationObserver(observationCallback).observe(textarea, observationConfig);
 
-                observer.observe(textarea, observationConfig);
-                oneshotObserver.disconnect();
+                observer.disconnect();
             }
         });
 
+        // hide the ellipsis button showing the "enhance msg" popup when pressed
         if (featureFlags.maximizingTextbox == "replace") {
             setObservation((mutations, observer) => {
-                    const enhanceButton = document.getElementsByClassName("popover-container")[0];
-                    if (enhanceButton != undefined) {
-                        enhanceButton.remove();
-                        observer.disconnect();
-                    }
+                const enhanceButton = document.getElementsByClassName("popover-container")[0];
+                if (enhanceButton != undefined) {
+                    enhanceButton.style.setProperty("display", "none");
+                    observer.disconnect();
+                }
             });
         }
     }

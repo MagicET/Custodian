@@ -23,7 +23,7 @@
     "128": "icon/icon128.png"
   },
   "action": {
-    "default_title": "Manage the feature flags and other preferences.",
+    "default_title": "Custodian Settings",
     "default_icon": "icon/icon128.png",
     "default_popup": "popup/popup.html"
   }

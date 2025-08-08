@@ -14,14 +14,14 @@ fetchFeatureFlags().then((featureFlags) => {
                     element.addEventListener("change", (e) => {
                         featureFlags[key] = e.target.checked;
                         chrome.storage.local.set({"featureFlags": featureFlags});
-                        document.getElementById("warning").style.setProperty("color", "white");
+                        document.getElementById("reloadAlert").style.setProperty("color", "white");
                     });
                 } else {
                     element.value = featureFlags[key];
                     element.addEventListener("input", (e) => {
                         featureFlags[key] = e.target.value;
                         chrome.storage.local.set({"featureFlags": featureFlags});
-                        document.getElementById("warning").style.setProperty("color", "white");
+                        document.getElementById("reloadAlert").style.setProperty("color", "white");
                     });
                 }
                 break;
@@ -30,7 +30,7 @@ fetchFeatureFlags().then((featureFlags) => {
                 element.addEventListener("change", (e) => {
                     featureFlags[key] = e.target.value;
                     chrome.storage.local.set({"featureFlags": featureFlags});
-                    document.getElementById("warning").style.setProperty("color", "white");
+                    document.getElementById("reloadAlert").style.setProperty("color", "white");
                 });
                 break;
             default:

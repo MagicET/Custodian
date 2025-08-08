@@ -11,7 +11,7 @@ This extension was made to enhance the experience of the webiste of [JanitorAI](
 You can enable or disable each of the feature on the popup window opens when you click the extension's "C" icon.
 
 # Install
-- Go to [releases](https://github.com/MagicET/Custodian/releases/) and download the recent version or the version you want.
+- Go to [releases](https://github.com/MagicET/Custodian/releases/) and download "Custodian.zip" from the recent version or the version you want.
 - Unzip the file and get the "Custodian" folder with everything in it.
 - Go to your browser's extension setting ([chrome://extensions/](chrome://extensions/) for Chrome users or [edge://extensions/](edge://extensions/) for Edge users).
 - Enable the "developer mode" in the extension setting page.
