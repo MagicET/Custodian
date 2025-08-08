@@ -1,3 +1,9 @@
+for (const anchor of document.getElementsByTagName("a")) {
+    anchor.onclick = function () {
+        chrome.tabs.create({url: anchor.href});
+    }
+}
+
 fetchFeatureFlags().then((featureFlags) => {
     for (const key of Object.keys(featureFlags)) {
         const element = document.getElementById(key);
