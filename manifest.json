@@ -1,6 +1,6 @@
 {
   "name": "Custodian",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "manifest_version": 3,
   "description": "This extension enhances the experience of JanitorAI. Works fully locally. Made by Magicet.",
   "permissions": [
