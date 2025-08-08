@@ -1,4 +1,4 @@
-const defaultFeatureFlags = { changingEditingColor: true, hidingHeader: true, maximizingTextbox: "replace" };
+const defaultFeatureFlags = { changingEditingColor: true, hidingHeader: true, maximizingTextbox: "replace", showingLinkedImage: true };
 
 async function fetchFeatureFlags() {
     let featureFlags = defaultFeatureFlags;

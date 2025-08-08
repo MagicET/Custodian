@@ -1,6 +1,8 @@
 # Custodian - Addon for JanitorAI
 This extension was made to enhance the experience of the webiste of [JanitorAI](https://janitorai.com/). The current features are:
 
+- Showing images from links like catbox.moe on character description pages
+    - working only for direct links to the image files, not like imageBB
 - Adding a button that hides the header on the chat page
 - Adding a button that maximizes the textbox on the chat page
     - You can choose the options: replacing the "enhance msg" button, or becoming available if your text are long
