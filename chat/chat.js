@@ -131,4 +131,30 @@ fetchFeatureFlags().then((featureFlags) => {
             });
         }
     }
+
+    // appearance feature
+    if (featureFlags.appearance != "dark") {
+        const style = document.createElement("style");
+        style.textContent = `body{
+                filter: invert(1) hue-rotate(180deg);
+            }
+            img {
+                filter: invert(1) hue-rotate(180deg);
+            }
+            div[class^="_chatLayoutContainer"] { 
+                background-color: black; 
+            } 
+            div[class^="_headerContainer"] { 
+                box-shadow: 0 4px 6px #ffffff1a, 0 2px 4px #ffffff0f;
+                background-color: #34343405;
+            }
+            textarea[class^="_chatTextarea"] {
+                background-color: #34343405;
+            }
+        `;
+        if (featureFlags.appearance == "system") {
+            style.media = "all and (prefers-color-scheme: light)"
+        }
+        document.head.appendChild(style);
+    }
 })
