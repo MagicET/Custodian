@@ -14,7 +14,7 @@ fetchFeatureFlags().then((featureFlags) => {
     // hidingHeaderButton feature
     if (featureFlags.hidingHeader) {
         setObservation((mutations, observer) => {
-            const header = document.getElementsByClassName("_headerContainer_efl0u_1")[0];
+            const header = document.querySelector('div[class^="_chatLayoutContainer"] div[class^="_headerContainer"]');
             if (header != undefined) {
                 // working with CSS
                 const hidingHeaderButton = document.createElement("input");
@@ -29,15 +29,17 @@ fetchFeatureFlags().then((featureFlags) => {
     // maximizingTextbox feature
     if (featureFlags.maximizingTextbox != "none") {
         setObservation((mutations, observer) => {
-            const textarea = document.getElementsByClassName("_chatTextarea_dzva7_1")[0];
+            const textarea = document.querySelector('textarea[class^="_chatTextarea"]');
             if (textarea != undefined) {
                 // dummy to calculate the auto height for the textarea
                 const dummy = document.createElement("textarea");
-                dummy.className = "_chatTextarea_dzva7_1";
+                dummy.className = textarea.className;
                 dummy.placeholder = "dummy\ndummy";
                 dummy.style.setProperty("visibility", "hidden");
                 dummy.style.setProperty("height", "1px", "important");
                 dummy.style.setProperty("width", `${textarea.clientWidth}px`);
+                dummy.style.setProperty("position", "absolute");
+                dummy.style.setProperty("top", "0px");
                 document.body.appendChild(dummy)
                 
                 // border-color is already in Janitor's code
@@ -54,7 +56,7 @@ fetchFeatureFlags().then((featureFlags) => {
                 
                 // set the maximized height depending on whether there is the soundcloud player in the header
                 const maxedHeight = (() => {
-                    const header = document.querySelector("._headerContainer_efl0u_1:has(._soundcloudPlayer_efl0u_43)");
+                    const header = document.querySelector('div[class^="_headerContainer"]:has([class^="_soundcloudPlayer"])');
                     if (header != undefined) {
                         return "calc(100vh - 7.4rem)";
                     }

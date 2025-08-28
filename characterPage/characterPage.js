@@ -18,7 +18,7 @@ fetchFeatureFlags().then((featureFlags) => {
         //showingLinkedImage feature
         if (featureFlags.showingLinkedImage != "none") {
             setObservation((mutation, observer) => {
-                const characterDescription = document.getElementsByClassName("css-2h3yxp")[0];
+                const characterDescription = document.getElementsByClassName("character-card-creator-box")[0].childNodes[1];
                 if (characterDescription != undefined) {
                     for (const child of deepChildNodes(characterDescription)) {
                         if (child.tagName == "A") {
