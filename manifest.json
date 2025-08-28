@@ -7,15 +7,14 @@
     "storage"
   ],
   "content_scripts": [{
-    "matches": ["https://janitorai.com/chats/*"],
-    "css": ["chat/chat.css"],
-    "js": ["storage.js", "chat/chat.js"]
-  },
-  {
     "matches": ["https://janitorai.com/*"],
-    "exclude_matches": ["https://janitorai.com/chats/*"],
     "css": [],
     "js": ["storage.js", "characterPage/characterPage.js"]
+  },
+  {
+    "matches": ["https://janitorai.com/chats/*"],
+    "css": ["chat/chat.css"],
+    "js": ["chat/chat.js"]
   }],
   "icons": {
     "16": "icon/icon16.png",
