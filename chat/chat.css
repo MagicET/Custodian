@@ -3,38 +3,38 @@ div[class^="_headerContainer"] {
     transition: translate .2s ease;
 
     &:has(.hidingHeaderButton:checked) {
-    translate: 0 -4em;
-}
+        translate: 0 -4em;
+    }
 
     &:has([class^="_soundcloudPlayer"]) {
         &:has(.hidingHeaderButton:checked) {
-    translate: 0 -5.5em;
-}
+            translate: 0 -5.5em;
+        }
         .hidingHeaderButton:checked {
             translate: 0 3.5em;
         }
     }
 
     .hidingHeaderButton {
-    appearance: none;
-    outline: none;
-    cursor: pointer;
-    top: 2.1em;
-    position: absolute;
-    left: min(calc(50vw + 21rem - 1.3em), calc(100vw - 1.3rem));
-    transition: translate .2s ease;
+        appearance: none;
+        outline: none;
+        cursor: pointer;
+        top: 2.1em;
+        position: absolute;
+        left: min(calc(50vw + 21rem - 1.3em), calc(100vw - 1.3rem));
+        transition: translate .2s ease;
 
         &:checked {
-    translate: 0 2em;
+            translate: 0 2em;
 
             &::before {
                 content: "▼";
-}
-}
+            }
+        }
 
         &::before {
-    content: "▲";
-}
+            content: "▲";
+        }
     }
 }
 
@@ -48,10 +48,65 @@ textarea[class^="_chatTextarea"] ~ .maximizingTextboxButton {
     translate: -80% 10%;
 
     &::before {
-    content: "↗";
-    color: #805ad5;
-    font-size: 1.2rem;
-}
+        content: "↗";
+        color: #805ad5;
+        font-size: 1.2rem;
+    }
     &:checked::before {
-    content: "↙";
+        content: "↙";
+    }
+}
+
+/* thinkbox feature */
+body {
+    --max-thinkbox-height: 8rem;
+}
+
+.custodianThinkBox {
+    margin: 1em 0;
+    box-shadow: #00000026 0 0 5px;
+    border-radius: 0.8em;
+    overflow: hidden;
+    outline: 2px solid #ffffff20;
+    outline-offset: -2px;
+
+    &:has(input.thinkBoxToggle:checked) div.thinkBoxTextContainer {
+        max-height: var(--max-thinkbox-height);
+        overflow-y: scroll;
+    }
+
+    div.thinkBoxHeader {
+        display: flex;
+        justify-content: space-between;
+        margin: 0;
+        padding: 0.5em 0.8em 0.4em;
+        background-color: #fff2;
+
+        div.thinkBoxName {
+            font-weight: bold;
+            color: #ffffff90;
+        }
+
+        input.thinkBoxToggle {
+            appearance: none;
+            outline: none;
+            cursor: pointer;
+            transition: transform 0.1s;
+
+            &::before {
+                content: "▼";
+            }
+            &:checked {
+                transform: rotate(90deg);
+            }
+        }
+    }
+
+    div.thinkBoxTextContainer {
+        overflow: hidden;
+        margin: 0;
+        padding: 0.3em 0.6em 0.5em;
+        background-color: #fff1;
+        transition: 0.1s;
+    }
 }

@@ -1,7 +1,20 @@
 fetchFeatureFlags().then((featureFlags) => {
-    function setObservation(observationCallback) {
+    function executeTo(getElement, execute) {
         const observationConfig = { childList: true, subtree: true };
-        new MutationObserver(observationCallback).observe(document.body, observationConfig);
+
+        const element = getElement();
+        if (element) {
+            // working with CSS
+            execute(element);
+        } else {
+            new MutationObserver((mutations, observer) => {
+                const element = getElement();
+                if (element != undefined) {
+                    execute(element);
+                    observer.disconnect();
+                }
+            }).observe(document.body, observationConfig);
+        }
     }
 
     // changingEditingColor feature
@@ -13,24 +26,23 @@ fetchFeatureFlags().then((featureFlags) => {
 
     // hidingHeaderButton feature
     if (featureFlags.hidingHeader) {
-        setObservation((mutations, observer) => {
-            const header = document.querySelector('div[class^="_chatLayoutContainer"] div[class^="_headerContainer"]');
-            if (header != undefined) {
+        executeTo(
+            () => document.querySelector('div[class^="_chatLayoutContainer"] div[class^="_headerContainer"]'),
+            (header) => {
                 // working with CSS
                 const hidingHeaderButton = document.createElement("input");
                 hidingHeaderButton.type = "checkbox";
                 hidingHeaderButton.className = "hidingHeaderButton";
                 header.appendChild(hidingHeaderButton);
-                observer.disconnect();
             }
-        });
+        )
     }
 
     // maximizingTextbox feature
     if (featureFlags.maximizingTextbox != "none") {
-        setObservation((mutations, observer) => {
-            const textarea = document.querySelector('textarea[class^="_chatTextarea"]');
-            if (textarea != undefined) {
+        executeTo(
+            () => document.querySelector('textarea[class^="_chatTextarea"]'),
+            (textarea) => {
                 // dummy to calculate the auto height for the textarea
                 const dummy = document.createElement("textarea");
                 dummy.className = textarea.className;
@@ -117,21 +129,108 @@ fetchFeatureFlags().then((featureFlags) => {
                     }
                 })();
                 new MutationObserver(observationCallback).observe(textarea, observationConfig);
-
-                observer.disconnect();
             }
-        });
+        );
 
         // hide the ellipsis button showing the "enhance msg" popup when pressed
         if (featureFlags.maximizingTextbox == "replace") {
-            setObservation((mutations, observer) => {
-                const enhanceButton = document.getElementsByClassName("popover-container")[0];
-                if (enhanceButton != undefined) {
+            executeTo(
+                () => document.getElementsByClassName("popover-container")[0],
+                (enhanceButton) => {
                     enhanceButton.style.setProperty("display", "none");
-                    observer.disconnect();
                 }
-            });
+            );
         }
+    }
+
+    // thinkBox feature
+    if (featureFlags.thinkBox != "none") {
+        executeTo(
+            () => document.querySelector('[class^="_messagesMain"] > div > div > div:has([class^="_messageDisplayWrapper"])'),
+            (messageContainer) => {
+                document.body.style.setProperty('--max-thinkbox-height', featureFlags.thinkBoxHeight + "rem")
+
+                function applyThinkBox(message) {
+                    messageMain = message.querySelector('& > div[class^="css"]');
+
+                    const walker = document.createTreeWalker(messageMain, NodeFilter.SHOW_TEXT)
+                    
+                    tags = [];
+
+                    while (walker.nextNode()) {
+                        const node = walker.currentNode;
+                        for (const match of node.textContent.matchAll(/<(\/*)(.+?)>/g)) {
+                            if (match[1].includes("/")) {
+                                tag = tags.findLast((tag) => {
+                                    return tag.name == match[2] && !tag.closed
+                                })
+                                if (tag) {
+                                    tag.range.setEnd(node, match.index + match[0].length);
+                                    tag.closed = true
+                                }
+                            } else {
+                                tags.push({name: match[2], range: document.createRange(), closed: false});
+                                tags[tags.length - 1].range.setStart(node, match.index);
+                            }
+                        }
+                    }
+                    
+
+                    for (const tag of tags) {
+                        if (featureFlags.thinkBox == "hide") {
+                            tag.range.deleteContents();
+                            continue;
+                        }
+                        if (tag.range.collapsed) {
+                            continue;
+                        }
+                        box = document.createElement("div");
+                        box.className = "custodianThinkBox";
+                        tagName = document.createElement("div");
+                        tagName.className = "thinkBoxName";
+                        if (tag.name == "think") {
+                            tagName.textContent = "Thinking";
+                        } else {
+                            tagName.textContent = tag.name;
+                        }
+                        toggle = document.createElement("input");
+                        toggle.type = "checkbox";
+                        toggle.className = "thinkBoxToggle";
+                        if (featureFlags.thinkBox == "folded") {
+                            toggle.checked = true;
+                        }
+                        if (featureFlags.thinkBox == "opened") {
+                            toggle.checked = false;
+                        }
+                        header = document.createElement("div");
+                        header.className = "thinkBoxHeader";
+                        header.append(tagName);
+                        header.append(toggle);
+                        box.append(header);
+
+                        textContainer = document.createElement("div");
+                        textContainer.className = "thinkBoxTextContainer";
+                        clone = tag.range.cloneContents();
+                        textContainer.append(clone);
+                        box.append(textContainer);
+                        tag.range.deleteContents();
+                        tag.range.insertNode(box);
+                    }
+                }
+
+                messages = messageContainer.querySelectorAll('div[class^="_messageBody"]');
+                for (const message of messages) {
+                    applyThinkBox(message)
+                }
+
+                new MutationObserver((mutations, observer) => {
+                    messages = messageContainer.querySelectorAll('div[class^="_messageBody"]:not(:has(textarea, .custodianThinkBox))');
+                    for (const message of messages) {
+                        applyThinkBox(message)
+                    }
+                }).observe(messageContainer, { childList: true, subtree: true });
+            }
+        )
     }
 
     // appearance feature

@@ -9,6 +9,11 @@ This extension was made to enhance the experience of the webiste of [JanitorAI](
 - Adding a button that maximizes the textbox on the chat page
     - You can choose the options: replacing the "enhance msg" button, or becoming available if your text are long
     - ![画面録画 2025-08-08 235142 (2)](https://github.com/user-attachments/assets/2d8324fb-d6f9-4a19-b0fd-de1794db5c47)
+- Thinkbox
+    - ![スクリーンショット 2025-09-08 170518](https://github.com/user-attachments/assets/8fb93f06-a556-4b67-aeae-da8f74ada309)
+    - Getting the thinkbox back
+- Light theme
+    - experimental, changing the theme of the chat page to light
 - Changing the text in the edit mode back to white
 
 You can enable or disable each of the feature on the popup window opens when you click the extension's "C" icon.

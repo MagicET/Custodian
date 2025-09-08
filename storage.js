@@ -1,4 +1,4 @@
-const defaultFeatureFlags = { appearance: "dark", changingEditingColor: true, hidingHeader: true, maximizingTextbox: "replace", showingLinkedImage: true };
+const defaultFeatureFlags = { appearance: "dark", changingEditingColor: true, hidingHeader: true, maximizingTextbox: "replace", thinkBox: "folded", thinkBoxHeight: 8, showingLinkedImage: true };
 
 async function fetchFeatureFlags() {
     let featureFlags = defaultFeatureFlags;

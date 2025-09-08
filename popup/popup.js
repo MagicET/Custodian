@@ -17,8 +17,11 @@ fetchFeatureFlags().then((featureFlags) => {
                         document.getElementById("reloadAlert").style.setProperty("color", "white");
                     });
                 } else {
+                    console.log(featureFlags[key]);
+                    console.log(key)
                     element.value = featureFlags[key];
                     element.addEventListener("input", (e) => {
+                        console.log("changed", e.target.value)
                         featureFlags[key] = e.target.value;
                         chrome.storage.local.set({"featureFlags": featureFlags});
                         document.getElementById("reloadAlert").style.setProperty("color", "white");
